@@ -38,7 +38,7 @@ function toBase64(str) {
 function buildTicket(counter) {
     const parts = [
         '\x1B\x61\x01', '\x1D\x21\x01', removeVietnameseTones('TRUNG TAM HANH CHINH CONG XA QUANG THANG') + '\n',
-        removeVietnameseTones('SON LA') + '\n', '------------------------------------------\n',
+        removeVietnameseTones('THANH HOA') + '\n', '------------------------------------------\n',
         removeVietnameseTones('PHIEU SO THU TU') + '\n', '------------------------------------------\n\n',
         '\x1B\x61\x01', '\x1D\x21\x33', counter + '\n', '\x1D\x21\x01', '\n',
         removeVietnameseTones('Vui long cho den luot') + '\n', '\n\n\n', '\x1D\x21\x00', '\x1D\x56\x42\x10'
