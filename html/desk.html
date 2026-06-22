@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Quầy</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="../data/data.js"></script>
+	<script defer src="../js/script.js"></script>
+	<style>
+	</style>
+</head>
+<body>
+	<main>
+		<div class="desk-container">
+            <div class="current-processing">
+                <h3>Số đang xử lý</h3>
+                <div id="currentTicket" class="ticket-info">
+                    <span class="ticket-number" id="currentTicketNumber">--</span>
+                    <span class="ticket-name" id="currentTicketName">Chưa có hồ sơ</span>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px;">
+                        <button class="btn-recall" id="btnRecall" style="display:none;">Gọi lại</button>
+                        <button class="btn-complete" id="btnComplete" style="display:none;">Hoàn thành</button>
+                        <button class="btn-reskip" id="btnReskip" style="display:none;">Bỏ qua</button>
+                    </div>
+                </div>
+            </div>
+            <div class="queue-section">
+                <h3>Danh sách hàng đợi</h3>
+                <div id="queueList" class="queue-list">
+                    
+                </div>
+            </div>
+        </div>
+	</main>
+    
+    <div id="modalConfirm" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <div id="modalMsg" class="modal-title"></div>
+            <div class="modal-actions">
+                <button id="modalOk" class="modal-btn confirm">Xác nhận</button>
+                <button id="modalCancel" class="modal-btn cancel">Huỷ</button>
+            </div>
+        </div>
+    </div>
+	<script>
+		
+	</script>
+</body>
+</html>
+
+
+
+

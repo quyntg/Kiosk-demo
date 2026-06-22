@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ</title>
+    <script src="https://unpkg.com/page/page.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../data/data.js"></script>
+    <script src="../js/script.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+	<header class="main-header">
+		<div class="header-content">
+			<span class="logo">
+				<img src="../data/quoc_huy.png" alt="Quốc huy" class="logo-emblem">
+				TRUNG TÂM HÀNH CHÍNH CÔNG XÃ QUẢNG THẮNG
+			</span>
+		</div>
+	</header>
+    <main id="app"></main>
+	<footer class="main-footer">
+		<div class="footer-content">
+			<span>&copy; 2026 ADVTV. All rights reserved.</span>
+		</div>
+	</footer>
+    <script>
+        page('/', () => {
+            loadPage('html/login.html', 'app').then(() => {
+                const spinner = document.getElementById('loginSpinner');
+                if (spinner && (!spinner.innerHTML || spinner.innerHTML.trim() === '')) {
+                    if (typeof spinnerSVG !== 'undefined') spinner.innerHTML = spinnerSVG;
+                }
+                
+                function attachLoginHandler() {
+                    let loginForm = document.querySelector('.login-form');
+                    if (loginForm) {
+                        loginForm.onsubmit = function(event) {
+                            event.preventDefault();
+                            let username = document.getElementById('username').value;
+                            let password = document.getElementById('password').value;
+                            login(username, password);
+                        };
+                    } else {
+                        if (typeof window._loginTryCount === 'undefined') window._loginTryCount = 0;
+                        if (window._loginTryCount < 10) {
+                            window._loginTryCount++;
+                            setTimeout(attachLoginHandler, 100);
+                        } else {
+                            window._loginTryCount = 0;
+                        }
+                    }
+                }
+                window._loginTryCount = 0;
+                attachLoginHandler();
+            });
+        });
+
+        page('/gate', () => {
+            loadPage('html/gate.html', 'app').then(() => {
+                document.body.removeAttribute('data-page');                
+                checkFirstLoginGateToday();
+                loadProcedureList();
+                listenCallQueueAndPlay();
+            });
+        });
+
+        page('/desk', () => {
+            loadPage('html/desk.html', 'app').then(() => {
+                document.body.removeAttribute('data-page');
+                let isFirstDeskLoad = true;
+                showDeskSpinner();
+                let deskId = sessionStorage.getItem('deskId') || 'desk1';
+                // ensure deskId is stored for subsequent calls
+                sessionStorage.setItem('deskId', deskId);
+                // start listening to callQueue so this desk plays audio when called
+                if (typeof listenCallQueueAndPlay === 'function') listenCallQueueAndPlay();
+                loadDeskQueue(0);
+                const btnComplete = document.getElementById('btnComplete');
+                if (btnComplete) {
+                    btnComplete.onclick = function() {
+                        if (current) showModal('Hoàn thành', current, completeTicket);
+                    };
+                }
+                
+                firebase.database().ref('/counter').on('value', function(snapshot) {
+                    const counter = snapshot.val();
+                    console.log('Counter mới nhất:', counter);
+                    if (isFirstDeskLoad) {
+                        isFirstDeskLoad = false;
+                        return;
+                    }   
+                    loadDeskQueue(1);
+                });
+                renderCurrent();
+            });
+        });
+        
+        page('/admin', () => {
+            loadPage('html/admin.html', 'app').then(() => {
+                document.body.removeAttribute('data-page');
+            });
+        });
+
+        page({ hashbang: true });
+    </script>
+</body>
+</html>
