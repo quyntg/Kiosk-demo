@@ -36,8 +36,15 @@ function toBase64(str) {
 }
 
 function buildTicket(counter) {
+    var gateId = sessionStorage.getItem('gateId') || 'cong';
+    var headerText = 'TRUNG TAM HANH CHINH CONG XA ABC';
+    if (gateId === 'cong') {
+        headerText = 'TRUNG TAM HANH CHINH CONG XA ABC';
+    } else if (gateId === 'cong2') {
+        headerText = 'TRUNG TAM Y TE XA ABC';
+    }
     const parts = [
-        '\x1B\x61\x01', '\x1D\x21\x01', removeVietnameseTones('TRUNG TAM HANH CHINH CONG XA ABC') + '\n',
+        '\x1B\x61\x01', '\x1D\x21\x01', removeVietnameseTones(headerText) + '\n',
         removeVietnameseTones('THANH HOA') + '\n', '------------------------------------------\n',
         removeVietnameseTones('PHIEU SO THU TU') + '\n', '------------------------------------------\n\n',
         '\x1B\x61\x01', '\x1D\x21\x33', counter + '\n', '\x1D\x21\x01', '\n',
@@ -310,8 +317,10 @@ function login(username, password) {
                 } else if (role === 'gate') {
                     if (username == 'cong') {
                         printerId = 75749342; // id test
+                        sessionStorage.setItem('gateId', 'cong');
                     } else if (username == 'cong2') {
                         printerId = 75963782; // id test
+                        sessionStorage.setItem('gateId', 'cong2');
                     }
 
                     page('/gate');
@@ -385,10 +394,21 @@ function loadProcedureList() {
         if (!snapshot.empty) {
             const deskList = snapshot.docs.map(doc => {
                 const d = doc.data() || {};
-                return {
-                    name: d.name || d.title || doc.id,
-                    id: d.id || doc.id
-                };
+                var headerText = document.getElementById('header-text');
+                if (sessionStorage.getItem('gateId') == 'cong') {
+                    headerText.textContent = 'TRUNG TÂM HÀNH CHÍNH CÔNG XÃ ABC';
+                    return {
+                        name: d.name || d.title || doc.id,
+                        id: d.id || doc.id
+                    };
+                } else if (sessionStorage.getItem('gateId') == 'cong2') {
+                    headerText.textContent = 'TRUNG TÂM Y TẾ XÃ ABC';
+                    return {
+                        name: d.name2 || d.title || doc.id,
+                        id: d.id || doc.id
+                    };
+                }
+                
             });
             deskList.forEach(item => {
                 const div = document.createElement('div');
