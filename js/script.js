@@ -308,6 +308,12 @@ function login(username, password) {
                 if (role === 'admin') {
                     page('/admin');
                 } else if (role === 'gate') {
+                    if (username == 'cong') {
+                        printerId = 75749342; // id test
+                    } else if (username == 'cong2') {
+                        printerId = 75963782; // id test
+                    }
+
                     page('/gate');
                     try {
                         if (typeof trySetCurrentDateAndRunDailyUpdate === 'function') trySetCurrentDateAndRunDailyUpdate().catch(console.error);
